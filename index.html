@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Creators Bot</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>⚙️ Creators Bot</h1>
+    <div class="chatbox" id="chatlog"></div>
+    <div class="input-group">
+      <input type="text" id="msg" placeholder="Ask me about content creation..." />
+      <button onclick="send()">Send</button>
+    </div>
+  </div>
+
+  <script>
+    async function send() {
+      const msg = document.getElementById("msg").value;
+      if (!msg) return;
+      const chatlog = document.getElementById("chatlog");
+      chatlog.innerHTML += `<p><strong>You:</strong> ${msg}</p>`;
+
+      const res = await fetch("/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: msg })
+      });
+
+      const data = await res.json();
+      chatlog.innerHTML += `<p><strong>Bot:</strong> ${data.response}</p>`;
+      chatlog.scrollTop = chatlog.scrollHeight;
+      document.getElementById("msg").value = "";
+    }
+  </script>
+</body>
+</html>
